@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, TextInput, Text } from 'react-native';
+import { StyleSheet, View, TextInput, Text, Dimensions } from 'react-native';
 import * as Font from 'expo-font';
 import Bender from './assets/fonts/Bender.otf';
 import ApiHelper from './src/ApiHelper';
+import Util from './src/Util';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 // TODO: cache search results, get article data, make it work for mobile, remove textbox highlight, make http calls to wiki work on mobile
@@ -106,21 +107,26 @@ export default App = () => {
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.outerContainer}>
                     <View style={styles.innerContainer}>
-                        <TextInput
-                            style={styles.searchBox}
-                            onChangeText={(text) => {
-                                setSearchText(text);
-                                search(text.trim());
-                            }}
-                            value={searchText}
-                            placeholder={'search'}
-                            autoFocus={true}
-                        />
-
-                        {searchResults.map((searchResult) => {
-                            return <Text style={styles.listItem} key={searchResult.id}>{searchResult.title}</Text>
-                        })}
-
+                        <View style={styles.searchBoxContainer}>
+                            <TextInput
+                                style={styles.searchBox}
+                                onChangeText={(text) => {
+                                    setSearchText(text);
+                                    search(text.trim());
+                                }}
+                                value={searchText}
+                                placeholder={'search'}
+                                autoFocus={true}
+                                placeholderTextColor={'#9a8866'}
+                            />
+                        </View>
+                        <View style={styles.searchResultsContainer}>
+                            <View style={styles.searchResults}>
+                                {searchResults.map((searchResult) => {
+                                    return <Text style={styles.listItem} key={searchResult.id}>{searchResult.title}</Text>
+                                })}
+                            </View>
+                        </View>
                     </View>
                 </View>
                 <StatusBar style="light" />
@@ -129,14 +135,17 @@ export default App = () => {
     );
 }
 
-const styles = StyleSheet.create({
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+const styleObject = {
     safeArea: {
         backgroundColor: '#000',
         alignItems: 'center',
         fontFamily: 'bender',
         color: '#9a8866',
-        height: '100%',
-        width: '100%'
+        height: windowHeight,
+        width: windowWidth
     },
     outerContainer: {
         flex: 1,
@@ -145,7 +154,7 @@ const styles = StyleSheet.create({
         fontFamily: 'bender',
         color: '#9a8866',
         fontSize: 18,
-        padding: 10,
+        padding: 20,
         height: '100%',
         width: '100%'
     },
@@ -159,6 +168,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         height: '100%'
     },
+    searchBoxContainer: {
+        width: '100%',
+        height: 42,
+    },
     searchBox: {
         height: 40,
         width: '100%',
@@ -168,8 +181,17 @@ const styles = StyleSheet.create({
         fontFamily: 'bender',
         color: '#9a8866',
         fontSize: 18,
-        placeholderTextColor: '#9a8866', // disable this only on mobile?
-        outlineWidth: 0
+    },
+    searchResultsContainer: {
+        flex: 1,
+        width: '100%',
+        position: 'absolute',
+        top: 40,
+        left: 0,
+        height: 'calc(100% - 40px)',
+    },
+    searchResults: {
+        flex: 1,
     },
     listItem: {
         height: 40,
@@ -182,4 +204,11 @@ const styles = StyleSheet.create({
         color: '#9a8866',
         fontSize: 18
     }
-});
+};
+
+if (Util.isElectron()) {
+    styleObject.searchBox.placeholderTextColor = '#9a8866';
+    styleObject.searchBox.outlineWidth = 0;
+}
+
+const styles = StyleSheet.create(styleObject);
