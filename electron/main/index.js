@@ -1,6 +1,6 @@
 'use strict';
 
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, session } from 'electron';
 import * as path from 'path';
 import { format as formatUrl } from 'url';
 
@@ -60,4 +60,11 @@ app.on('activate', () => {
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
   mainWindow = createMainWindow();
+
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    details.requestHeaders['User-Agent'] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
+    details.requestHeaders['Referer'] = "https://escapefromtarkov.fandom.com/";
+    callback({ cancel: false, requestHeaders: details.requestHeaders });
+  });
 });
+
