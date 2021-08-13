@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, View, TextInput, Text, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, View, TextInput, Text, ScrollView, Dimensions, ActivityIndicator } from 'react-native';
 import Util from './Util';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { AppContext } from './AppContext';
@@ -50,7 +50,8 @@ export default MainScreen = () => {
                     <View style={styles.outerContainer}>
                         <View style={styles.innerContainer}>
                             <Text style={styles.title}>Escape from Tarkov Qwiki</Text>
-                            <Text style={styles.loadingMessage}>Loading...</Text>
+                            {/* <Text style={styles.loadingMessage}>Loading...</Text> */}
+                            <ActivityIndicator color="#9a8866" />
                         </View>
                     </View>
                     <StatusBar style="light" />

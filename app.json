@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "tarkov-buddy",
-    "slug": "tarkov-buddy",
+    "name": "tarkov-qwiki",
+    "slug": "tarkov-qwiki",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
